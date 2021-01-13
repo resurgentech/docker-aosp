@@ -14,12 +14,20 @@ set -e
 #
 
 # Reasonable defaults if no USER_ID/GROUP_ID environment variables are set.
+
+if [ -z $AOSP_AS_ROOT ]; then
+  msg=""
+else
+  if [[ -z $@ ]]; then
+    exec /bin/bash
+    exit $?
+  fi
+  exec /bin/bash -c "$@"
+  exit $?
+fi
+
 if [ -z ${USER_ID+x} ]; then USER_ID=1000; fi
 if [ -z ${GROUP_ID+x} ]; then GROUP_ID=1000; fi
-
-# ccache
-export CCACHE_DIR=/tmp/ccache
-export USE_CCACHE=1
 
 msg="docker_entrypoint: Creating user UID/GID [$USER_ID/$GROUP_ID]" && echo $msg
 groupadd -g $GROUP_ID -r aosp && \
@@ -41,12 +49,10 @@ echo "$msg - done"
 
 echo ""
 
-# Default to 'bash' if no arguments are provided
-args="$@"
-if [ -z "$args" ]; then
-  args="bash"
-fi
-
 # Execute command as `aosp` user
 export HOME=/home/aosp
-exec sudo -E -u aosp $args
+if [[ -z $@ ]]; then
+  exec sudo -E -u aosp /bin/bash
+  exit $?
+fi
+exec sudo -E -u aosp /bin/bash -c "$@"

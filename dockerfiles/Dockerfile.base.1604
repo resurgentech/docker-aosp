@@ -1,0 +1,29 @@
+#
+# Basis for Minimum Docker image to build Android AOSP using Ubuntu 16.04
+#
+FROM ubuntu:16.04
+
+MAINTAINER Jared Hulbert <jaredeh@gmail.com>
+
+# /bin/sh points to Dash by default, reconfigure to use bash until Android
+# build becomes POSIX compliant
+RUN echo "dash dash/sh boolean false" | debconf-set-selections && \
+    dpkg-reconfigure -p critical dash
+
+# Keep the dependency list as short as reasonable
+RUN apt-get update && \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y openjdk-8-jdk  && \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y git-core gnupg flex bison \
+      gperf build-essential zip curl zlib1g-dev gcc-multilib g++-multilib \
+      libc6-dev-i386 lib32ncurses5-dev x11proto-core-dev libx11-dev lib32z-dev \
+      libgl1-mesa-dev libxml2-utils xsltproc unzip openssl libssl-dev && \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y ccache automake lzop \
+      python-networkx bzip2 libbz2-dev libbz2-1.0 libghc-bzlib-dev \
+      squashfs-tools pngcrush schedtool dpkg-dev liblz4-tool optipng maven \
+      libc6-dev linux-libc-dev g++-5-multilib && \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y bc vim-common cgpt && \
+    apt-get install -y software-properties-common sudo && \
+    add-apt-repository -y ppa:deadsnakes/ppa && \
+    apt-get update && \
+    apt-get install -y python3.6 && \
+    apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*

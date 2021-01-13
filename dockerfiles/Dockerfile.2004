@@ -1,0 +1,27 @@
+#
+# Minimum Docker image to build Android AOSP
+#
+FROM resurgentech/aosp_base:2004
+
+MAINTAINER Jared Hulbert <jaredeh@gmail.com>
+
+# Set python3 as default python
+RUN update-alternatives --install /bin/python python /usr/bin/python3 1
+
+# Install repo
+ADD https://commondatastorage.googleapis.com/git-repo-downloads/repo /usr/local/bin/
+RUN chmod 755 /usr/local/bin/*
+
+# Set up git and ssh for hacks
+COPY utils/gitconfig /root/.gitconfig
+COPY utils/ssh_config /root/.ssh/config
+
+# The persistent data will be in these two directories, everything else is
+# considered to be ephemeral
+VOLUME ["/tmp/ccache", "/aosp", "/workdir"]
+
+# Work in the build directory, repo is expected to be init'd here
+WORKDIR /workdir
+
+COPY utils/docker_entrypoint.sh /root/docker_entrypoint.sh
+ENTRYPOINT ["/root/docker_entrypoint.sh"]
