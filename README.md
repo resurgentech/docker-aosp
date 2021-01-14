@@ -4,7 +4,7 @@ Minimal Docker image capable of building AOSP and related Android system code.
 
 ## Install
 
-Assuming Docker works properly just run the following to create a docker image that can be used to build aosp and even run adb jobs as necessary.
+Assuming Docker works properly just run the following to create a docker image that can be used to build aosp
 ```
 ./scripts/make_docker_image.sh
 ```
