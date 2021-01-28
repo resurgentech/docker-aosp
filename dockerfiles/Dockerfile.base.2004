@@ -12,15 +12,40 @@ RUN echo "dash dash/sh boolean false" | debconf-set-selections && \
 
 # Keep the dependency list as short as reasonable
 RUN apt-get update && \
-    DEBIAN_FRONTEND=noninteractive apt-get install -y \
-        openjdk-8-jdk bc bison build-essential sudo wget curl flex \
+    DEBIAN_FRONTEND=noninteractive \
+    apt-get install -y \
+        openjdk-8-jdk && \
+    apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+RUN apt-get update && \
+    DEBIAN_FRONTEND=noninteractive \
+    apt-get install -y \
+        build-essential && \
+    apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+RUN apt-get update && \
+    DEBIAN_FRONTEND=noninteractive \
+    apt-get install -y \
         g++-multilib gcc-multilib gnupg gperf imagemagick lib32ncurses5-dev \
         lib32readline-dev lib32z1-dev liblz4-tool libncurses5-dev libsdl1.2-dev \
-        libssl-dev libwxgtk3.0-gtk3-dev libxml2 libxml2-utils lzop pngcrush \
-        rsync schedtool squashfs-tools xsltproc yasm zip zlib1g-dev git-core \
-        python3.8 libncurses5 ccache python3-pip \
-        software-properties-common util-linux cpio && \
+        libssl-dev libwxgtk3.0-gtk3-dev libxml2 libxml2-utils zlib1g-dev \
+        libncurses5 && \
     apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+RUN apt-get update && \
+    DEBIAN_FRONTEND=noninteractive \
+    apt-get install -y \
+        bc bison sudo wget curl flex lzop pngcrush rsync schedtool util-linux \
+        squashfs-tools xsltproc yasm zip git-core cpio \
+        software-properties-common && \
+    apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+RUN apt-get update && \
+    DEBIAN_FRONTEND=noninteractive \
+    apt-get install -y \
+        python3.8 ccache python3-pip && \
+    apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
 RUN wget https://dist.ipfs.io/go-ipfs/v0.7.0/go-ipfs_v0.7.0_linux-amd64.tar.gz && \
     tar -xvzf go-ipfs_v0.7.0_linux-amd64.tar.gz && \
     cd go-ipfs; sudo bash install.sh; cd .. && \
