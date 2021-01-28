@@ -19,5 +19,5 @@ RUN apt-get update && \
         libssl-dev libwxgtk3.0-gtk3-dev libxml2 libxml2-utils lzop pngcrush \
         rsync schedtool squashfs-tools xsltproc yasm zip zlib1g-dev git-core \
         python3.8 libncurses5 ccache python3-pip \
-        software-properties-common && \
+        software-properties-common util-linux cpio && \
     apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*

@@ -15,4 +15,6 @@ docker push  ${REPOPROFILE}/aosp_base:1604
 docker push  ${REPOPROFILE}/aosp:1604
 
 docker push  ${REPOPROFILE}/aosp_base:2004
+docker tag ${REPOPROFILE}/aosp:2004 ${REPOPROFILE}/aosp:latest
 docker push  ${REPOPROFILE}/aosp:2004
+docker push  ${REPOPROFILE}/aosp:latest
